@@ -22,10 +22,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('users',ProfileController::class);
 });
 
 Route::get('/home', function () {
     return Inertia::render('Home');
 });
+
+Route::post('/admin/users/{id}/toggle-status', [ProfileController::class, 'toggleStatus']);
+
 
 require __DIR__.'/auth.php';

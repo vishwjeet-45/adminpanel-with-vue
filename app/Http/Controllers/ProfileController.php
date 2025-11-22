@@ -10,9 +10,38 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->search) {
+            $query->where('name', 'like', "%{$request->search}%")
+                ->orWhere('email', 'like', "%{$request->search}%");
+        }
+        // dd($query->paginate(10)->toArray(),$query->get());
+        return Inertia::render('Admin/User/List', [
+            'users' => $query->paginate(1)->toArray(),
+            'filters' => [
+                'search' => $request->search,
+            ],
+        ]);
+    }
+
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->status = $user->status === 'active' ? 'inactive' : 'active';
+        $user->save();
+
+        return back()->with('success', 'User status updated successfully!');
+    }
+
     /**
      * Display the user's profile form.
      */

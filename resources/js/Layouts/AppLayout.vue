@@ -1,25 +1,23 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow p-4">
-      <h2 class="font-bold text-xl mb-4">Admin</h2>
+  <div class="admin-wrapper flex min-h-screen bg-[rgb(248,255,236)] !important">
+    <Sidebar :menuItems="menu" />
 
-      <nav>
-        <ul class="space-y-2">
-          <li><Link href="/dashboard">Dashboard</Link></li>
-          <li><Link href="/users">Users</Link></li>
-          <li><Link href="/roles">Roles</Link></li>
-        </ul>
-      </nav>
-    </aside>
+    <div class="content-area flex-1 ml-64 flex flex-col">
+      <Header />
 
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-      <slot />
-    </main>
+      <main class="flex-1 p-4 sm:p-6">
+        <slot />
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import Sidebar from "@/Components/Sidebar.vue";
+import Header from "@/Components/Header.vue";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+// Assuming `sidebar_menu_links` is an array of menu objects
+const menu = page.props.sidebar_menu_links;
 </script>

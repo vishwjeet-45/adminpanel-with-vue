@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
+use App\Services\SidebarService;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +24,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+
+        Inertia::share([
+            'sidebar_menu_links' => function () {
+                return Auth::check()
+                    ? SidebarService::get()
+                    : [];
+            },
+            'flash' => function () {
+            return [
+                'success' => session()->get('success')
+            ];
+        },
+        ]);
     }
 }
